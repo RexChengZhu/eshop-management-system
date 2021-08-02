@@ -1,9 +1,10 @@
 import { extend } from 'umi-request';
 import { notification, message } from 'antd';
+
 type Msg = {
-  [key:number] :string
+  [key: number]: string
 }
-const codeMessage:Msg = {
+const codeMessage: Msg = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
   202: '一个请求已经进入后台排队（异步任务）。',
@@ -20,8 +21,8 @@ const codeMessage:Msg = {
   503: '服务不可用，服务器暂时过载或维护。',
   504: '网关超时。',
 };
-const errorHandler = (error: { response:Response }) : Response=>{
-  const {response} = error;
+const errorHandler = (error: { response: Response }): Response => {
+  const { response } = error;
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
@@ -37,13 +38,55 @@ const errorHandler = (error: { response:Response }) : Response=>{
     });
   }
   return response || {};
-}
+};
 const request = extend({
-  prefix:"http://localhost:8080/",
-  timeout:2000,
-  headers:{
-    'Content-Type': 'application/json;charset=UTF-8'
+  // prefix:"http://localhost:8080/",
+  timeout: 2000,
+  headers: {
+    'Content-Type': 'application/json;charset=UTF-8',
   },
-  errorHandler
-})
+  errorHandler,
+});
+/**
+ * 处理响应/请求入参数据，删除返回值为null的数据，避免结构赋值出现问题
+ * @param response
+ */
+const handleResponseData = (response: object) => {
+  if (!response || typeof response !== 'object') {
+    return {};
+  }
+  // JSON.stringify(response) 可直接删除属性值为undefined的属性
+  const data = JSON.parse(JSON.stringify(response), (k, v) => {
+    if (v === null) {
+      return undefined;
+    }
+    return v;
+  });
+  if (!data) {
+    return {};
+  }
+  return data;
+};
+// request拦截器, 改变url 或 options.
+request.interceptors.request.use((url, options) => {
+  // todo do something
+  return {
+    url,
+    options,
+  };
+});
+
+request.interceptors.response.use(async (response: Response) => {
+  const res = await response.clone().json();
+  debugger
+  const { msg, code } = res;
+  if (code !== 200) {
+    message.warning(msg);
+  } else {
+    const {data} = handleResponseData(res);
+    data.success = true
+    return data;
+  }
+  return response;
+});
 export default request;

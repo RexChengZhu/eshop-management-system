@@ -3,12 +3,14 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import Header from '../../components/login-register-header'
 import {connect} from 'umi'
+import React from 'react';
+import request from '@/utils/request';
 interface ILogin{
   login:Function
 }
-const LoginForm = (props:ILogin) => {
+const LoginForm:React.FC<ILogin> = ({login}) => {
   const onFinish = (values: any) => {
-    props.login(values)
+    login(values)
   };
 
   return (
@@ -54,23 +56,20 @@ const LoginForm = (props:ILogin) => {
   );
 };
 
-const index = (props:any)=>{
-
-
+const index:React.FC<ILogin> = ({login})=>{
 
   return(
     <div className={'login'}>
       <Header />
       <div className={'login-content'}>
         <h1>用户登陆</h1>
-        <LoginForm login={props.login}/>
+        <LoginForm login={login}/>
       </div>
     </div>
   )
 }
 // 容器组件和ui组件链接
 export default connect((state)=>{
-  //
   return {...state}
 },(dispatch)=>{
   return {
