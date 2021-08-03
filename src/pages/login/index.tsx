@@ -62,12 +62,6 @@ const LoginForm: React.FC<ILogin> = ({ login }) => {
 
 const index: React.FC<ILogin> = ({ login }) => {
 
-  useEffect(() => {
-    const user =  getUser()
-    if (user !== null){
-      history.replace('/')
-    }
-  }, []);
   return (
     <div className={'login'}>
       <Header />
