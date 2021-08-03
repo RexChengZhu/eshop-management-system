@@ -6,6 +6,7 @@ import { Resp } from '@/common/type';
 import { UserType } from '@/pages/login/data';
 import { history } from 'umi';
 import { message } from 'antd';
+import {saveUser} from '../../utils/storage'
 interface ILoginModel {
   namespace: 'login',
   state: {},
@@ -25,14 +26,11 @@ const model: ILoginModel = {
     * loginAsync({ payload }, { put, call }) {
       const  data : Resp<UserType> = yield call(login, payload);
       if (data.success){
+        debugger
         message.success("登陆成功")
+        saveUser(data.data)
         history.replace('/')
       }
-
-      // yield put({
-      //   type: 'login',
-      //   payload: data,
-      // });
     },
   },
   reducers: {

@@ -78,12 +78,11 @@ request.interceptors.request.use((url, options) => {
 
 request.interceptors.response.use(async (response: Response) => {
   const res = await response.clone().json();
-  debugger
   const { msg, code } = res;
   if (code !== 200) {
     message.warning(msg);
   } else {
-    const {data} = handleResponseData(res);
+    const data = handleResponseData(res);
     data.success = true
     return data;
   }
