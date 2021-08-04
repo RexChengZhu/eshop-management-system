@@ -1,8 +1,7 @@
-
-const index = (props:any)=>{
+const index = ()=>{
   return(
     <div>
-      home
+      商品管理
     </div>
   )
 }

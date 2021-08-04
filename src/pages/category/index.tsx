@@ -6,7 +6,7 @@ const index = (props:any)=>{
 
   return (
     <div>
-      category
+      分类管理
     </div>
   )
 }

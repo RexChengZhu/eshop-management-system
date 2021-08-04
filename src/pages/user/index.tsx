@@ -2,7 +2,7 @@
 const index = (props:any)=>{
   return(
     <div>
-      home
+      用户管理
     </div>
   )
 }

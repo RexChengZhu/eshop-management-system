@@ -39,10 +39,13 @@ const LeftNav = () => {
           </Menu.Item>
         </SubMenu>
         <Menu.Item key="4" icon={<UserOutlined />}>
-          <Link to={'management'} >用户管理</Link>
+          <Link to={'user'} >用户管理</Link>
         </Menu.Item>
         <Menu.Item key="5" icon={<HeatMapOutlined />}>
-          角色管理
+          <Link to={'role'}>角色管理</Link>
+        </Menu.Item>
+        <Menu.Item key="6" icon={<HeatMapOutlined />}>
+          <Link to={'chart'}>图表管理</Link>
         </Menu.Item>
       </Menu>
     </Sider>
