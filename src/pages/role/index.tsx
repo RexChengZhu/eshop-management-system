@@ -1,8 +1,12 @@
-const index = ()=>{
-  return(
-    <div>
-      角色管理
-    </div>
-  )
-}
-export default index;
+import React from 'react';
+
+
+const Category:React.FC = () => {
+  return (
+    <>
+      role
+    </>
+  );
+};
+
+export default Category;

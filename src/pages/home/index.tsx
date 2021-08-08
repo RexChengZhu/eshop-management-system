@@ -1,9 +1,12 @@
+import React from 'react';
 
-const index = (props:any)=>{
-  return(
-    <div>
+
+const Category:React.FC = () => {
+  return (
+    <>
       home
-    </div>
-  )
-}
-export default index;
+    </>
+  );
+};
+
+export default Category;

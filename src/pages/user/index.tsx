@@ -1,9 +1,12 @@
+import React from 'react';
 
-const index = (props:any)=>{
-  return(
-    <div>
-      用户管理
-    </div>
-  )
-}
-export default index;
+
+const Category:React.FC = () => {
+  return (
+    <>
+      user
+    </>
+  );
+};
+
+export default Category;

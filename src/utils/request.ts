@@ -40,8 +40,8 @@ const errorHandler = (error: { response: Response }): Response => {
   return response || {};
 };
 const request = extend({
-  // prefix:"http://localhost:8080/",
-  timeout: 2000,
+  prefix:"http://192.168.0.94:2001",
+  timeout: 20000,
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
   },

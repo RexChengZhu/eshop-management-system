@@ -11,16 +11,6 @@ export default defineConfig({
   },
   routes: [
     {
-      title:'登陆',
-      path: '/login',
-      component: '@/pages/login/index',
-    },
-    {
-      title:'注册',
-      path: '/register',
-      component: '@/pages/register/index',
-    },
-    {
       path: '/',
       component: '@/layouts/index',
       wrappers: [
@@ -50,11 +40,11 @@ export default defineConfig({
           path: '/role',
           component: '@/pages/role/index',
         },
-        {
-          title:'图表管理',
-          path: '/chart',
-          component: '@/pages/chart/index',
-        },
+        // {
+        //   title:'图表管理',
+        //   path: '/chart',
+        //   component: '@/pages/chart/index',
+        // },
 
       ],
     },

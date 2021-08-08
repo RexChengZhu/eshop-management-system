@@ -1,25 +1,24 @@
-import { IRouteComponentProps } from 'umi'
+import { IRouteComponentProps } from 'umi';
 
 import { Layout } from 'antd';
-import Header from '../components/header'
-import LeftNav from '../components/left-nav'
 
-const {  Footer, Content } = Layout;
-export default function index({ children, location, route, history, match }: IRouteComponentProps) {
-  if (location.pathname === '/') history.replace('/home')
+const { Header, Footer, Sider, Content } = Layout;
+import LeftMenu from '@/components/LeftMenu';
+
+export default function Main({ children, location, route, history, match }: IRouteComponentProps) {
+
   return (
-    <div>
-      <Layout style={{height:"100vh"}}>
-        <LeftNav />
+    <>
+      <Layout style={{height:'100vh'}}>
+        <Sider>
+          <LeftMenu />
+        </Sider>
         <Layout>
-          <Header />
-          <Content>
-            {children}
-          </Content>
+          <Header>Header</Header>
+          <Content>{children}</Content>
           <Footer>Footer</Footer>
         </Layout>
       </Layout>
-    </div>
-
-  )
+    </>
+  );
 }
