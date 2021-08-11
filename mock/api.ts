@@ -1,34 +1,39 @@
+import mockjs from 'mockjs';
+
 export default {
+  // 使用 mockjs 等三方库
 
-  'POST /api/users/create': {
-    code: 200,
-    msg: '登陆成功',
+  'GET /wares/tcategory/list': mockjs.mock({
+    msg:'',
+    code:'',
     data: {
-      id:12,
-      username: 'peter',
-    },
-  },
-  'POST /api/category/list': {
-    code: 200,
-    msg: '成功',
-    data: [
-      {
-        pid:0,
-        id: 1,
-        name: 'John Brown',
-      },
-      {
-        pid:0,
-        id: 2,
-        name: 'Joe Black',
-      },
-    ]
-  },
-  'POST /api/category/update': {
-    code: 200,
-    msg: '成功',
-    data: {}
-  },
+      curPage:1,
+      totalCount:10,
+      'list|10-20':[
+        {
+          id:"@increment(1)",
+          pid:0,
+          name:'@first',
+          unit:'',
+          avatar:'',
+          count:'',
+          subList:[
+            {
+              id:'@increment(1)',
+              pid:'',
+              name:'',
+              unit:'',
+              avatar:'',
+              count:'',
+              subList:[
 
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+  }),
 
 };

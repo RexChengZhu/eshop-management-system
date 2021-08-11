@@ -1,95 +1,129 @@
-import React, { useEffect, useState ,useMemo} from 'react';
-import { Card, Button, Table, Modal, Input,Breadcrumb } from 'antd';
+import React, { useEffect, useState, useMemo } from 'react';
+import { Card, Button, Table, Modal, Input, Breadcrumb } from 'antd';
 import { PlusOutlined, RightOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import { getCategoryList, updateCategory } from '@/service/api';
 
+type SelectType = {
+  id?: number,
+  name?: string
+}
+
+interface ITitle {
+  list: SelectType[],
+  click: (id: number) => void
+}
+
+const Title = ({ list, click }: ITitle) => {
+
+  return (
+    <Breadcrumb>
+      {
+        list.map(item => {
+          return (<Breadcrumb.Item>
+              <a href='javascript:;' onClick={() => click(item.id!)}>{item.name}</a>
+            </Breadcrumb.Item>
+          );
+        })
+      }
+    </Breadcrumb>
+  );
+};
+
+
 const Category: React.FC = () => {
-  const { data: result, run: listRun } = useRequest(() => getCategoryList());
-  const { data: updateResult, run } = useRequest((category) => updateCategory(category), { manual: true });
+  const { data: result, run: listRun } = useRequest(getCategoryList, { debounceInterval: 500, manual: true });
+  const { data: updateResult, run } = useRequest((category) => updateCategory(category), {
+    debounceInterval: 500,
+    manual: true,
+  });
+  const { data: addResult, run: addRun } = useRequest((category) => updateCategory(category), {
+    debounceInterval: 500,
+    manual: true,
+  });
+
+  const reloadList = (id: number) => {
+    const newList = [];
+    for (let i = 0; i < selectList.length; i++) {
+      const data = selectList[i];
+      if (data.id !== id) {
+        newList.push(data);
+      } else {
+        newList.push(data);
+        break;
+      }
+    }
+    setSelectList(newList);
+  };
+
 
   const changeCategory = (data: API.Category) => {
     setCategory({ ...data });
     setVisible(true);
   };
   const checkChild = (data: API.Category) => {
-    setList([...data.subList || []]);
-    const arr = [...selectList,data];
-    debugger
-    setSelectList(arr)
+    setSelectList([...selectList, { id: data.id, name: data.name }]);
+    setList(data.subList!);
   };
   // 编辑分类选中的分类
   const [category, setCategory] = useState<API.Category>() || undefined;
+  const [changeVisible, setChangeVisible] = useState(false);
+  const [changeConfirmLoading, setChangeConfirmLoading] = useState(false);
+
+  // 添加分类选中的分类
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
+
   const [curPage, setCurPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(5);
+  const [total, setTotal] = useState(0);
   const [list, setList] = useState<API.Category[]>([]) || [];
   // 被选中了的列表
-  const [selectList,setSelectList] = useState<API.Category[]>([])
+  const [selectList, setSelectList] = useState<SelectType[]>([{ id: 0, name: '一级分类' }]);
   useEffect(() => {
     listRun().then();
+
   }, []);
   useEffect(() => {
-
     setList([...result?.data?.list || []]);
-
+    setTotal(result?.data?.totalCount!);
   }, [result]);
 
   useEffect(() => {
-    setConfirmLoading(false);
-    setVisible(false);
+    setChangeConfirmLoading(false);
+    setChangeVisible(false);
     listRun().then();
   }, [updateResult]);
-  const handleOk = () => {
-    setConfirmLoading(true);
+  const changeHandleOk = () => {
+    setChangeConfirmLoading(true);
     run(category).then();
   };
-
-  const Title = ()=>{
-
-    let i = 0;
-    let arr = selectList.map(item=>{
-      ++i;
-      if(selectList.length == 1){
-        return(
-          <>
-            <Breadcrumb.Item>一级分类</Breadcrumb.Item>
-          </>
-        )
-      }else{
-        if (i === selectList.length){
-          return (
-            <>
-              <Breadcrumb.Item>{item.name}</Breadcrumb.Item>
-            </>
-          )
-        }else{
-          return (
-            <>
-              <Breadcrumb.Item>
-                <a href=''>{item.name}</a>
-              </Breadcrumb.Item>
-            </>
-          )
-        }
-      }
-
-    })
-    arr = arr || ( <Breadcrumb.Item>一级分类</Breadcrumb.Item>)
-    return (
-      <Breadcrumb>
-        {
-          arr
-        }
-      </Breadcrumb>
-    )
+  const handleOk = () => {
+    setChangeConfirmLoading(true);
+    category!.pid = selectList[selectList.length - 1].id;
+    addRun(category).then();
   };
+  useEffect(() => {
+    setChangeConfirmLoading(false);
+    setVisible(false);
+    listRun().then();
+  }, [addResult]);
+
   return (
     <>
       <Modal
-        title={<Title/>}
+        title={'修改分类名称'}
+        visible={changeVisible}
+        onOk={changeHandleOk}
+        confirmLoading={changeConfirmLoading}
+        onCancel={() => setChangeVisible(false)}
+      >
+        <Input placeholder='请输入分类名称' onChange={(e) => setCategory({ ...category, name: e.target.value })} />
+      </Modal>
+
+      <Modal
+        title={'添加分类名称'}
         visible={visible}
         onOk={handleOk}
         confirmLoading={confirmLoading}
@@ -98,13 +132,18 @@ const Category: React.FC = () => {
         <Input placeholder='请输入分类名称' onChange={(e) => setCategory({ ...category, name: e.target.value })} />
       </Modal>
 
-      <Card  title={<Title />} extra={
-        <Button type='primary' icon={<PlusOutlined />}>添加</Button>
+
+      <Card title={<Title
+        list={selectList}
+        click={reloadList}
+      />} extra={
+        <Button type='primary' icon={<PlusOutlined />} onClick={() => setVisible(true)}>添加</Button>
       } style={{ height: '100vh' }}>
         <Table<API.Category> dataSource={list} rowKey={'id'}
                              pagination={{
-                               current: 1,
-                               defaultPageSize: 10,
+                               defaultCurrent: 1,
+                               defaultPageSize: pageSize,
+                               total: total,
                              }}
         >
           <Table.Column<API.Category> title='Name' dataIndex='name' />
