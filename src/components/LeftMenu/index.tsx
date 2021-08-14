@@ -23,8 +23,11 @@ const LeftMenu = () => {
           <Menu.Item key='/category' icon={<BlockOutlined />}>
             <Link to={'/category'}>分类管理</Link>
           </Menu.Item>
+          <Menu.Item key='/product' icon={<BugOutlined />}>
+            <Link to={'/product'}>商品管理</Link>
+          </Menu.Item>
           <Menu.Item key='/brand' icon={<BugOutlined />}>
-            <Link to={'/brand'}>商品管理</Link>
+            <Link to={'/brand'}>品牌管理</Link>
           </Menu.Item>
         </SubMenu>
         <Menu.Item key='/user' icon={<UsbOutlined />}>

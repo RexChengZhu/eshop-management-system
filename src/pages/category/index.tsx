@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Card, Button, Table, Modal, Input, Breadcrumb } from 'antd';
 import { PlusOutlined, RightOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
-import { getCategoryList, updateCategory } from '@/service/api';
+import { getCategoryList, updateCategory,addCategory } from '@/service/api';
 
 type SelectType = {
   id?: number,
@@ -37,7 +37,7 @@ const Category: React.FC = () => {
     debounceInterval: 500,
     manual: true,
   });
-  const { data: addResult, run: addRun } = useRequest((category) => updateCategory(category), {
+  const { data: addResult, run: addRun } = useRequest(addCategory, {
     debounceInterval: 500,
     manual: true,
   });

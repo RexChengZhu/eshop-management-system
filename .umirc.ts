@@ -29,17 +29,34 @@ export default defineConfig({
         },
         {
           title:'商品管理',
-          path: '/brand',
-          component: '@/pages/brand/index',
-        },{
+          path: '/product',
+          component: '@/pages/product/index',
+        },
+        {
+          title:"添加商品",
+          path:'/product/addupdate',
+          component:"@/pages/product/addupdate/index"
+        },
+        {
+          title:"商品详情",
+          path:'/product/detail',
+          component:"@/pages/product/detail/index"
+        },
+        {
           title:'用户管理',
           path: '/user',
           component: '@/pages/user/index',
-        },{
+        },
+        {
           title:'角色管理',
           path: '/role',
           component: '@/pages/role/index',
         },
+        {
+          title: "品牌管理",
+          path: "/brand",
+          component: "@/pages/brand/index"
+        }
         // {
         //   title:'图表管理',
         //   path: '/chart',
@@ -48,6 +65,7 @@ export default defineConfig({
 
       ],
     },
+
 
   ],
 });
