@@ -1,5 +1,5 @@
 import { useRequest } from 'ahooks';
-import { addBrand, brandList } from '@/service/api';
+import { addBrand, brandList, delBrand } from '@/service/api';
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Form, Input, Modal, Switch, Table } from 'antd';
 import TableSearch from '@/components/TableSearch';
@@ -9,13 +9,14 @@ import UploadTool from '@/components/Upload';
 const Brand = () => {
   const { run } = useRequest(brandList, { manual: true });
   const {run:addR} = useRequest(addBrand,{manual:true})
+  const {run:deleteR} = useRequest(delBrand,{manual:true})
+  const [form] = Form.useForm();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [keyword, setKeyword] = useState('');
   const [data, setData] = useState<API.Page<API.Brand>>();
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [check, setCheck] = useState(true);
   const [logo, setLogo] = useState<string[]>();
   useEffect(() => {
     query();
@@ -28,6 +29,11 @@ const Brand = () => {
 
     });
   };
+  const del = (id:number)=>{
+    deleteR(id).then(success=>{
+      query();
+    })
+  }
 
   const onFinish = (data:API.Brand)=>{
     data.status = data.status === true ? 1 : 0;
@@ -36,6 +42,7 @@ const Brand = () => {
     }
     addR(data).then(_=>{
       setVisible(false)
+      form.resetFields
       query();
     })
   }
@@ -49,10 +56,10 @@ const Brand = () => {
         footer={null}
       >
         <Form
+          form={form}
           name='basic'
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
-          initialValues={{ remember: true }}
           onFinish={onFinish}
         >
           <Form.Item
@@ -131,20 +138,14 @@ const Brand = () => {
           <Table.Column<API.Brand> title='品牌logo' dataIndex='logoUrl' render={(url)=>{
             return(
               <>
-                <img src={url} alt='' style={{width:'100px',height:'30px'}} />
+                <img src={url} alt='' style={{width:'100px'}} />
               </>
             )
           }}/>
           <Table.Column<API.Brand> title='描述' dataIndex='desc' />
           <Table.Column<API.Brand> title='状态' dataIndex='status' />
           <Table.Column<API.Brand> title='检索首字母' dataIndex='searchKey' />
-          <Table.Column<API.Brand> title='排序' dataIndex='id' render={() => {
-            return (
-              <>
 
-              </>
-            );
-          }} />
           <Table.Column<API.Brand> title='操作' dataIndex='id' render={(_, data) => {
             return (
               <>
@@ -152,6 +153,7 @@ const Brand = () => {
                 }}>修改</a>
                 &nbsp;&nbsp;
                 <a href='javascript:;' onClick={() => {
+                  del(data.id!)
                 }}>删除</a>
               </>
             );

@@ -55,4 +55,11 @@ declare namespace API{
     searchKey?:string
 
   }
+
+  // spu属性分组
+  type AttrGroup = {
+    id:number,
+    catId:number,
+    name:string
+  }
 }
