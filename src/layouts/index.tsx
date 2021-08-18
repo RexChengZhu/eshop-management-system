@@ -7,6 +7,7 @@ import LeftMenu from '@/components/LeftMenu';
 
 export default function Main({ children, location, route, history, match }: IRouteComponentProps) {
 
+  if (location.pathname === '/') history.push('/home')
   return (
     <>
       <Layout style={{height:'100vh'}}>
@@ -14,9 +15,9 @@ export default function Main({ children, location, route, history, match }: IRou
           <LeftMenu />
         </Sider>
         <Layout>
-          <Header>Header</Header>
-          <Content>{children}</Content>
-          <Footer>Footer</Footer>
+          {/*<Header>Header</Header>*/}
+          {/*<Content>{children}</Content>*/}
+          {/*<Footer>Footer</Footer>*/}
         </Layout>
       </Layout>
     </>
