@@ -14,8 +14,8 @@ export async function getOssSignature(options?: { [key: string]: any }) {
  * @param options
  */
 export async function getCategoryList(options?: { [key: string]: any }) {
-  return request.get<API.R<API.Page<API.Category>>>('/product/category/list', {
-    ...(options || {}),
+  return request.post<API.R<API.Page<API.Category>>>('/product/category/list', {
+    data:options
   })
 }
 

@@ -59,12 +59,12 @@ export default defineConfig({
         },
         {
           title: '属性分组',
-          path: '/platform/attr_group',
+          path: '/attr_group',
           component: '@/pages/platform/attrGroup',
         },
         {
           title: '销售属性',
-          path: '/platform/attr_sku',
+          path: '/attr_sku',
           component: '@/pages/platform/skuAttr',
         },
       ],

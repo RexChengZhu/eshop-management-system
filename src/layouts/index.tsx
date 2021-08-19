@@ -15,9 +15,9 @@ export default function Main({ children, location, route, history, match }: IRou
           <LeftMenu />
         </Sider>
         <Layout>
-          {/*<Header>Header</Header>*/}
-          {/*<Content>{children}</Content>*/}
-          {/*<Footer>Footer</Footer>*/}
+          <Header>Header</Header>
+          <Content>{children}</Content>
+          <Footer>Footer</Footer>
         </Layout>
       </Layout>
     </>
