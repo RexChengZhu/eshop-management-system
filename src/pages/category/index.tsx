@@ -2,7 +2,7 @@ import { Card, Button, Table, Modal, Input, Breadcrumb } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
-import { addCategory, getCategoryList } from '@/service/api';
+import { addCategory, categoryList } from '@/service/api';
 
 
 const Category = () => {
@@ -13,11 +13,11 @@ const Category = () => {
   const { run: addRun } = useRequest(addCategory, {
     manual: true,
   });
-  const { data, run } = useRequest(getCategoryList, {
+  const { data, run } = useRequest(categoryList, {
     manual: true,
   });
   useEffect(() => {
-    run({ currentPage: 1, pageSize: 10 });
+    run({ currentPage: 1, pageSize: 5 });
   }, []);
   const [selectedList, setSelectedList] = useState<{ id: number, title: string }[]>([{ id: 0, title: '一级分类' }]);
 
@@ -27,7 +27,7 @@ const Category = () => {
         {
           selectedList?.map(item => {
             return (
-              <Breadcrumb.Item>
+              <Breadcrumb.Item key={item.id}>
                 <a href='javascript:;' onClick={() => {
                   while (true) {
                     // 从数组最后开始pop
@@ -87,7 +87,7 @@ const Category = () => {
             },
           }}
         >
-          <Table.Column<API.Category> title='Name' dataIndex='name' />
+          <Table.Column<API.Category>  title='Name' dataIndex='name' />
           <Table.Column<API.Category> title='操作' render={(_, data) => {
             return (
               <>

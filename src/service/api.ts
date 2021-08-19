@@ -13,7 +13,7 @@ export async function getOssSignature(options?: { [key: string]: any }) {
  * 获得分类列表
  * @param options
  */
-export async function getCategoryList(options?: { [key: string]: any }) {
+export async function categoryList(options?: { [key: string]: any }) {
   return request.post<API.R<API.Page<API.Category>>>('/product/category/list', {
     data:options
   })
@@ -46,7 +46,7 @@ export async function productList(options?:any){
 
 
 export async function brandList(options?:any){
-  return request.get<API.R<API.Page<API.Product>>>('/product/brand/list',{
+  return request.post<API.R<API.Page<API.Product>>>('/product/brand/list',{
     data:options
   })
 }

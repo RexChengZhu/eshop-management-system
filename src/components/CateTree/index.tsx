@@ -1,13 +1,13 @@
 import { Tree } from 'antd';
 import { useRequest } from 'ahooks';
-import { getCategoryList } from '@/service/api';
+import { categoryList } from '@/service/api';
 import { useEffect, useState } from 'react';
 import { DataNode, Key } from 'rc-tree/lib/interface';
 interface ICateTree{
   selected:(key:string)=>void
 }
 const CateTree = ({selected}:ICateTree) => {
-  const { data } = useRequest(getCategoryList);
+  const { data } = useRequest(categoryList);
   const [list, setList] = useState<DataNode[]>();
   useEffect(() => {
     setList(getDataNode(data?.data?.list!));
@@ -27,9 +27,7 @@ const CateTree = ({selected}:ICateTree) => {
   }
   const onSelect = (keys:Key[])=>{
     const key = keys[0]
-    console.log('keyss------',keys)
     if (key == undefined){
-      debugger
     }else{
       selected(key.toString())
     }

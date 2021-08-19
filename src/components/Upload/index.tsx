@@ -15,7 +15,6 @@ const UploadTool: any = ({onIChange}:IUpload) => {
   useEffect(() => {
     init();
   }, []);
-
   const beforeUpload = async (file: any) => {
     let { expire } = ossData!;
     expire = expire! * 1000;
@@ -27,7 +26,6 @@ const UploadTool: any = ({onIChange}:IUpload) => {
     file.url = ossData!.dir + filename;
     return file;
   };
-
   const extra = (file: any) => {
     return {
       key: file.url,
@@ -44,7 +42,7 @@ const UploadTool: any = ({onIChange}:IUpload) => {
     });
   };
   const onChange = (file:any) => {
-    const list = file.fileList.map((item:any)=>ossData!.host+"/"+item.url);
+    const list = file.fileList.map((item:any)=>ossData?.host+"/"+item.url);
     onIChange([...list])
   };
   return (
@@ -57,7 +55,7 @@ const UploadTool: any = ({onIChange}:IUpload) => {
         data={extra}
         beforeUpload={beforeUpload}
       >
-        <Button icon={<UploadOutlined />}>Click to Upload</Button>
+        <Button icon={<UploadOutlined />}>上传图片</Button>
       </Upload>
     </>
   );

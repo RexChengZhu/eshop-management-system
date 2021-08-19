@@ -7,35 +7,51 @@ export default {
    * 分类列表
    */
   'POST /product/category/list': mockjs.mock({
-    msg:'',
-    code:'',
+    msg: '',
+    code: '',
     data: {
-      curPage:1,
-      totalCount:10,
-      'list|10-20':[
+      curPage: 1,
+      totalCount: 10,
+      'list|10-20': [
         {
-          id:"@increment(1)",
-          pid:0,
-          name:'@ctitle(3)',
-          unit:'',
-          avatar:'',
-          count:'',
-          subList:[
+          id: '@increment(1)',
+          pid: 0,
+          name: '@ctitle(3)',
+          unit: '',
+          avatar: '',
+          count: '',
+          subList: [
             {
-              id:'@increment(1)',
-              pid:'',
-              name:'@ctitle(3)',
-              unit:'',
-              avatar:'',
-              count:'',
-              subList:[
+              id: '@increment(1)',
+              pid: '',
+              name: '@ctitle(3)',
+              unit: '',
+              avatar: '',
+              count: '',
+              subList: [],
+            },
+          ],
+        },
+      ],
+    },
+  }),
 
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    }),
-
+  'POST /product/brand/list': mockjs.mock({
+    msg: '',
+    code: '',
+    data: {
+      curPage: 1,
+      totalCount: 10,
+      'list|10-20': [
+        {
+          id: '@increment(1)',
+          name: '@ctitle(3)',
+          logoUrl: '',
+          desc: '@ctitle(20)',
+          "status|0-1": 0,
+          searchKey: '',
+        },
+      ],
+    },
+  }),
 };
