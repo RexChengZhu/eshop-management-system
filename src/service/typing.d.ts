@@ -62,4 +62,12 @@ declare namespace API{
     catId:number,
     name:string
   }
+
+  // 品牌分组列表
+  type BrandCat = {
+    id:number,
+    brandId:number,
+    catId:number,
+    catName:string
+  }
 }

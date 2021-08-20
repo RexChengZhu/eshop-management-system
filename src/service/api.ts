@@ -51,6 +51,21 @@ export async function brandList(options?:any){
   })
 }
 
+/**
+ * 添加品牌分类关联
+ * @param options
+ */
+export async function addBrandCat(options?:any){
+  return request.post<API.R<API.Page<API.Product>>>('/product/brand/addCat',{
+    data:options
+  })
+}
+
+export async function brandCatList(options?:any){
+  return request.post<API.R<API.Page<API.BrandCat>>>('/product/brand/brandCatList',{
+    data:options
+  })
+}
 export async function addBrand(options:API.Brand){
   return request.post<API.R<API.Page<API.Product>>>('/product/brand/add',{
     data:options

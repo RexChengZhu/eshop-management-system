@@ -1,21 +1,24 @@
-import { Button, Card, Form, Input, Modal, Switch, Table } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Button, Card, Form, Input, Modal, Switch, Table, TreeSelect } from 'antd';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { useRequest } from 'ahooks';
-import { addBrand, brandList, categoryList } from '@/service/api';
+import { addBrand, addBrandCat, brandCatList, brandList, categoryList } from '@/service/api';
 import UploadTool from '@/components/Upload';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
-interface IAddBrand{
-  addSuccess:()=>void
+import { DataNode } from 'rc-tree/lib/interface';
+
+interface IAddBrand {
+  addSuccess: () => void
 }
-const AddBrand = ({addSuccess}:IAddBrand) => {
+
+const AddBrand = ({ addSuccess }: IAddBrand) => {
   const [form] = Form.useForm();
-  const {run} = useRequest(addBrand,{
-    manual:true
-  })
-  const onFinish = (form:any) => {
-    run(form).then(_=>{
-      addSuccess()
-    })
+  const { run } = useRequest(addBrand, {
+    manual: true,
+  });
+  const onFinish = (form: any) => {
+    run(form).then(_ => {
+      addSuccess();
+    });
   };
   return (
     <>
@@ -34,10 +37,12 @@ const AddBrand = ({addSuccess}:IAddBrand) => {
           <Input />
         </Form.Item>
         <Form.Item label='品牌logo'
-          name={'logo'}
+                   name={'logo'}
         >
           <UploadTool
-            onIChange={(list: string[]) => {form.setFieldsValue({logo:list})}}
+            onIChange={(list: string[]) => {
+              form.setFieldsValue({ logo: list });
+            }}
           >
             <Button icon={<UploadOutlined />}>上传图片</Button>
           </UploadTool>
@@ -77,6 +82,83 @@ const AddBrand = ({addSuccess}:IAddBrand) => {
   );
 };
 
+const BrandCat = () => {
+  const { data, run: listRun } = useRequest(brandCatList, {
+    manual: true,
+  });
+  const { data:catlist } = useRequest(categoryList);
+
+  useEffect(() => {
+    listRun({ currentPage: 1, pageSize: 5 });
+  }, []);
+  const { run } = useRequest(addBrandCat, {
+    manual: true,
+  });
+  const [list, setList] = useState<DataNode[]>();
+  useEffect(() => {
+    const list = getDataNode(catlist?.data?.list!);
+    setList(list);
+  }, [catlist]);
+  const getDataNode = (list: API.Category[]): DataNode[] => {
+    if (list == undefined) {
+      return [];
+    }
+    return list.map(item => {
+      const length = item.subList?.length || 0;
+      const data: DataNode = { key: item.id + '', title: item.name };
+      if (length > 0) {
+        data['children'] = getDataNode(item.subList!);
+      }
+      return data;
+    });
+  };
+  const [selectCatList,setSelectCatList] = useState<{id:number,name:string}[]>()
+  return (
+    <>
+      <TreeSelect
+        treeCheckable={true}
+        showCheckedStrategy={'SHOW_PARENT'}
+        style={{
+          width: '400px',
+        }}
+        onChange={(value:string[],list:ReactNode[])=>{
+          const mm:string[] = list.map((item:ReactNode)=>{
+            return  item!.toString()
+          });
+          const arr = []
+          for (let i = 0; i < mm.length; i++) {
+            const name = mm[i];
+            const id = Number(value[i]);
+            arr.push({id,name})
+          }
+          setSelectCatList(arr)
+        }}
+        treeData={list}
+      />
+      <Button onClick={() => {
+        debugger
+        run({selectCatList}).then(_ => {
+          listRun({ currentPage: 1, pageSize: 5 });
+        });
+      }}>添加关联</Button>
+      <Table<API.BrandCat>
+        dataSource={data?.data?.list} rowKey={'id'}
+        pagination={{
+          defaultCurrent: 1,
+          defaultPageSize: 5,
+          total: data?.data?.totalCount,
+          onChange: function(page, size) {
+            listRun({ currentPage: page, pageSize: size });
+          },
+        }}
+      >
+        <Table.Column<API.BrandCat> title='关联分类' dataIndex='catName' />
+      </Table>
+
+    </>
+  );
+};
+
 export default function() {
   const { data, run } = useRequest(brandList, {
     manual: true,
@@ -86,22 +168,32 @@ export default function() {
   }, []);
 
   const [visible, setVisible] = useState(false);
-
+  const [brandCatVisible, setBrandCatVisible] = useState(false);
   return (
     <>
       <Modal
         visible={visible}
         footer={null}
-        onCancel={()=>setVisible(false)}
+        onCancel={() => setVisible(false)}
         destroyOnClose={true}
       >
         <AddBrand
-          addSuccess={()=>{
-            setVisible(false)
+          addSuccess={() => {
+            setVisible(false);
             run({ currentPage: 1, pageSize: 5 });
           }}
         />
       </Modal>
+
+      <Modal
+        visible={brandCatVisible}
+        footer={null}
+        onCancel={() => setBrandCatVisible(false)}
+        destroyOnClose={true}
+      >
+        <BrandCat />
+      </Modal>
+
       <Card
         extra={
           <Button type='primary' icon={<PlusOutlined />} onClick={() => setVisible(true)}>添加</Button>
@@ -128,18 +220,22 @@ export default function() {
             );
           }} />
           <Table.Column<API.Brand> title='描述' dataIndex='desc' />
-          <Table.Column<API.Brand> title='状态' dataIndex='status' render={(status)=>{
+          <Table.Column<API.Brand> title='状态' dataIndex='status' render={(status) => {
             return (
               <>
-                {status === 0 ? "上线":"下线"}
+                {status === 0 ? '上线' : '下线'}
               </>
-            )
-          }}/>
+            );
+          }} />
           <Table.Column<API.Brand> title='检索首字母' dataIndex='searchKey' />
 
           <Table.Column<API.Brand> title='操作' dataIndex='id' render={(_, data) => {
             return (
               <>
+                <a href='javascript:;' onClick={() => {
+                  setBrandCatVisible(true);
+                }}>关联分类</a>
+                &nbsp;&nbsp;
                 <a href='javascript:;' onClick={() => {
 
                 }}>修改</a>

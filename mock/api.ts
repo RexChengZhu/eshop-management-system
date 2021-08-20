@@ -54,4 +54,37 @@ export default {
       ],
     },
   }),
+
+  'POST /product/attrGroup/list': mockjs.mock({
+    msg: '',
+    code: '',
+    data: {
+      curPage: 1,
+      totalCount: 10,
+      'list|10-20': [
+        {
+          id: '@increment(1)',
+          name: '@ctitle(3)',
+          catId:'@increment(100)'
+        },
+      ],
+    },
+  }),
+
+  'POST /product/brand/brandCatList': mockjs.mock({
+    msg: '',
+    code: '',
+    data: {
+      curPage: 1,
+      totalCount: 10,
+      'list|10-20': [
+        {
+          id: '@increment(1)',
+          brandId: '@increment(1)',
+          catId:'@increment(100)',
+          catName:'@ctitle(3)'
+        },
+      ],
+    },
+  })
 };
