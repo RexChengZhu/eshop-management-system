@@ -1,7 +1,6 @@
 import { Effect, Reducer } from '@@/plugin-dva/connect';
-import { deleteCategory, getCategoryList, updateCategory } from '@/pages/category/service';
+import { deleteCategory, getCategoryList, updateCategory,addCategory } from '@/pages/category/service';
 import { Category, CategoryStateType } from '@/pages/category/data.t';
-import { addCategory } from '@/service/api';
 
 interface ICategory {
   namespace?: string,
@@ -40,7 +39,7 @@ const Model: ICategory = {
 
     },
     * deleteCategory({ payload }, { put, call }) {
-      yield call(deleteCategory, [...payload]);
+      yield call(deleteCategory, payload[0]);
 
     },
     * updateCategory({payload},{put,call}){

@@ -19,7 +19,7 @@ const Index = (props: any) => {
   const [item, setItem] = useState<Category>();
   const [selectedList, setSelectedList] = useState<{ id: number, title: string }[]>([{ id: 0, title: '一级分类' }]);
   useEffect(() => {
-    getList({ currentPage: 1, pageSize: 10 });
+    getList({ currentPage: 1, pageSize: 10, data: 0 });
   }, []);
 
   const AddModel = () => {
@@ -31,7 +31,7 @@ const Index = (props: any) => {
         onOk={() => {
           const name = inputEl.current?.input.value;
           addCategory({ pid, name }).then(_ => {
-            getList({ pid });
+            getList({ data:pid });
           });
           setVisible(false);
         }}
@@ -50,8 +50,8 @@ const Index = (props: any) => {
         visible={addVisible}
         onOk={() => {
           const name = inputEl.current?.input.value;
-          updateCategory({ id:item!.id, name }).then(_ => {
-            getList({ data:pid });
+          updateCategory({ id: item!.id, name }).then(_ => {
+            getList({ data: pid });
           });
           setAddVisible(false);
         }}
@@ -86,10 +86,10 @@ const Index = (props: any) => {
           dataSource={list} rowKey={'id'}
           pagination={{
             defaultCurrent: 1,
-            defaultPageSize: 5,
+            defaultPageSize: 10,
             total: totalCount,
             onChange: function(page, size) {
-              getList({ currentPage: page, pageSize: size, pid });
+              getList({ currentPage: page, pageSize: size, data: pid });
             },
           }}
         >
@@ -110,7 +110,7 @@ const Index = (props: any) => {
                 &nbsp;&nbsp;
                 <Button onClick={() => {
                   deleteCategory([data.id]).then(_ => {
-                    getList({ pid });
+                    getList({ data: pid });
                   });
                 }}>删除</Button>
 
@@ -118,23 +118,22 @@ const Index = (props: any) => {
               </>
             );
           }} />
-        </Table>
-      </Card>
-    </>
-  );
-};
+            </Table>
+            </Card>
+            </>
+            );
+          };
 const mapStateToProps = ({ category }: { category: CategoryStateType }) => {
   return { ...category };
 };
 
 
 const mapDispatchToProps = (dispatch: any): CategoryDispatchProps => ({
-    getList: (data?: any) => dispatch({ type: 'category/getCategoryListAsync', payload: data }),
-    addCategory: (data?: any) => dispatch({ type: 'category/addCategory', payload: data }),
-    deleteCategory: (data?: any) => dispatch({ type: 'category/deleteCategory', payload: data }),
-    updateCategory: (data?: any) => dispatch({ type: 'category/updateCategory', payload: data }),
-  })
-;
+  getList: (data?: any) => dispatch({ type: 'category/getCategoryListAsync', payload: data }),
+  addCategory: (data?: any) => dispatch({ type: 'category/addCategory', payload: data }),
+  deleteCategory: (data?: any) => dispatch({ type: 'category/deleteCategory', payload: data }),
+  updateCategory: (data?: any) => dispatch({ type: 'category/updateCategory', payload: data }),
+});
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Index);
