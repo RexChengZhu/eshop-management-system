@@ -71,12 +71,12 @@ const list: LeftMenuItem[] = [
         icon: <BlockOutlined />,
         parent: '/platform_parent',
       },
-      {
-        key: '/attr_param',
-        title: '参数规格',
-        icon: <BugOutlined />,
-        parent: '/platform_parent',
-      },
+      // {
+      //   key: '/attr_param',
+      //   title: '参数规格',
+      //   icon: <BugOutlined />,
+      //   parent: '/platform_parent',
+      // },
       {
         key: '/attr_sku',
         title: '销售属性',

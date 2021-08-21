@@ -14,6 +14,7 @@ export default function() {
     manual: true,
   });
   const [addVisible, setAddVisible] = useState(false);
+  const [relateVisible, setRelateVisible] = useState(false);
   const [addConfirmLoading, setAddConfirmLoading] = useState(false);
   const inputEl = useRef<Input | null>(null)
   const addOk = () => {
@@ -64,6 +65,13 @@ export default function() {
               <Table.Column<API.AttrGroup> title='分组id' dataIndex='id' />
               <Table.Column<API.AttrGroup> title='Name' dataIndex='name' />
               <Table.Column<API.AttrGroup> title='所属分类ID' dataIndex='catId' />
+              <Table.Column<API.AttrGroup> title='操作' render={()=>{
+                return(
+                  <>
+                    <Button onClick={()=>{setRelateVisible(true)}}>关联</Button>
+                  </>
+                )
+              }} />
             </Table>
           </Card>
         </Layout>

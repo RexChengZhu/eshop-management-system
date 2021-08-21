@@ -1,73 +1,81 @@
-declare namespace API{
+declare namespace API {
   type R<T> = {
-    code?:number,
-    msg?:string,
-    data?:T
+    code?: number,
+    msg?: string,
+    data?: T
   }
   type Page<T> = {
-    curPage?:number,
-    totalCount?:number,
-    list?:T[]
+    curPage?: number,
+    totalCount?: number,
+    list?: T[]
   }
   type Oss = {
-    dir?:string,
-    expire?:number,
-    host?:string,
-    accessId?:string,
-    policy?:string,
-    signature?:string,
+    dir?: string,
+    expire?: number,
+    host?: string,
+    accessId?: string,
+    policy?: string,
+    signature?: string,
   }
   // 商品分类
   type Category = {
-    id?:number,
-    pid?:number,
-    name?:string,
-    unit?:string,
-    avatar?:string,
-    count?:number,
-    subList?:Category[]
+    id?: number,
+    pid?: number,
+    name?: string,
+    unit?: string,
+    avatar?: string,
+    count?: number,
+    subList?: Category[]
   }
 
   // 商品
   type Product = {
     // 主键id
-    id?:number,
+    id?: number,
     // 商品分类id
-    cid?:number,
+    cid?: number,
     // 商品名称
-    name?:string,
+    name?: string,
     // 商品价格
-    price?:number,
+    price?: number,
     // 商品描述
-    desc?:string,
+    desc?: string,
     // 商品状态
-    status?:number,
+    status?: number,
 
   }
 
   // 品牌
   type Brand = {
-    id?:number,
-    name?:string,
-    logoUrl?:string,
-    desc?:string,
-    status?:number | boolean,
-    searchKey?:string
+    id?: number,
+    name?: string,
+    logoUrl?: string,
+    desc?: string,
+    status?: number | boolean,
+    searchKey?: string
 
   }
 
   // spu属性分组
   type AttrGroup = {
-    id:number,
-    catId:number,
-    name:string
+    id: number,
+    catId: number,
+    name: string
   }
 
   // 品牌分组列表
   type BrandCat = {
-    id:number,
-    brandId:number,
-    catId:number,
-    catName:string
+    id: number,
+    brandId: number,
+    catId: number,
+    catName: string
   }
+
+  type SkuAttr = {
+    id:number,
+    name:string,
+    valueType:number,
+    catId:number,
+  }
+
 }
