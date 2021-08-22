@@ -5,10 +5,10 @@ interface IProdDetail{
 }
 const Detail:React.FC<IProdDetail> = ({id})=>{
 
-  useEffect(()=>{
-    // 请求详细信息
-    console.log('detail---',id);
-  },[])
+  // useEffect(()=>{
+  //   // 请求详细信息
+  //   console.log('detail---',id);
+  // },[])
   return(
     <>
       Detail

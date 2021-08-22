@@ -33,6 +33,11 @@ export default defineConfig({
           component: '@/pages/product/index',
         },
         {
+          title: '商品分类管理',
+          path: '/brand/category-relation',
+          component: '@/pages/brand/categoryRelate/index',
+        },
+        {
           title: '添加商品',
           path: '/product/addupdate',
           component: '@/pages/product/addupdate/index',

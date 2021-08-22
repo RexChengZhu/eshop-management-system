@@ -1,4 +1,4 @@
-import { connect } from 'umi';
+import { connect,Link } from 'umi';
 import { Brand, BrandDispatchProps, BrandStateType } from '@/pages/brand/data.t';
 import { CategoryDispatchProps, CategoryStateType } from '@/pages/category/data.t';
 import { Button, Card, Modal, Table, Switch, Form, Input } from 'antd';
@@ -141,9 +141,13 @@ const Index = (props: any) => {
           <Table.Column<Brand> title='操作' dataIndex='id' render={(_, data) => {
             return (
               <>
-                <a href='#!' onClick={() => {
+                <Link to={{
+                  pathname:"/brand/category-relation/",
+                  search:"id="+data.id
+                }}  >
+                  关联分类
+                </Link>
 
-                }}>关联分类</a>
                 &nbsp;&nbsp;
                 <a href='#!' onClick={() => {
 
