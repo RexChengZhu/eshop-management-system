@@ -67,7 +67,7 @@ export async function brandCatList(options?:any){
   })
 }
 export async function addBrand(options:API.Brand){
-  return request.post<API.R<API.Page<API.Product>>>('/product/brand/add',{
+  return request.post<API.R<API.Page<API.Product>>>('/product/brand/save',{
     data:options
   })
 }

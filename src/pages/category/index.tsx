@@ -31,7 +31,7 @@ const Index = (props: any) => {
         onOk={() => {
           const name = inputEl.current?.input.value;
           addCategory({ pid, name }).then(_ => {
-            getList({ data:pid });
+            getList({ data: pid });
           });
           setVisible(false);
         }}
@@ -118,11 +118,11 @@ const Index = (props: any) => {
               </>
             );
           }} />
-            </Table>
-            </Card>
-            </>
-            );
-          };
+        </Table>
+      </Card>
+    </>
+  );
+};
 const mapStateToProps = ({ category }: { category: CategoryStateType }) => {
   return { ...category };
 };

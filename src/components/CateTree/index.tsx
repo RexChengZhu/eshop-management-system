@@ -1,18 +1,13 @@
 import { Tree } from 'antd';
-import { useRequest } from 'ahooks';
-import { categoryList } from '@/service/api';
-import { useEffect, useState } from 'react';
 import { DataNode, Key } from 'rc-tree/lib/interface';
+import { Category } from '@/pages/category/data.t';
 interface ICateTree{
-  selected:(key:string)=>void
+  selected:(item:Category)=>void
+  list?:Category[]
 }
-const CateTree = ({selected}:ICateTree) => {
-  const { data } = useRequest(categoryList);
-  const [list, setList] = useState<DataNode[]>();
-  useEffect(() => {
-    setList(getDataNode(data?.data?.list!));
-  }, [data]);
-  const getDataNode = (list:API.Category[]) :DataNode[]=>{
+const CateTree = ({selected,list}:ICateTree) => {
+
+  const getDataNode = (list?:Category[]) :DataNode[]=>{
     if (list == undefined){
       return [];
     }
@@ -25,20 +20,18 @@ const CateTree = ({selected}:ICateTree) => {
       return data;
     })
   }
-  const onSelect = (keys:Key[])=>{
-    const key = keys[0]
-    if (key == undefined){
-    }else{
-      selected(key.toString())
-    }
-  }
   return (
     <>
       <Tree
         style={{height:'100vh'}}
         className='draggable-tree'
-        treeData={list}
-        onSelect={onSelect}
+        treeData={getDataNode(list)}
+        onSelect={(_,b)=>{
+          if (b != undefined){
+            const node = b.selectedNodes[0]
+            selected({id:Number(node.key),name:node.title!.toString()})
+          }
+        }}
       />
     </>
   );

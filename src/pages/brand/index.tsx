@@ -1,247 +1,171 @@
-import { Button, Card, Form, Input, Modal, Switch, Table, TreeSelect } from 'antd';
-import React, { ReactNode, useEffect, useState } from 'react';
-import { useRequest } from 'ahooks';
-import { addBrand, addBrandCat, brandCatList, brandList, categoryList } from '@/service/api';
+import { connect } from 'umi';
+import { Brand, BrandDispatchProps, BrandStateType } from '@/pages/brand/data.t';
+import { CategoryDispatchProps, CategoryStateType } from '@/pages/category/data.t';
+import { Button, Card, Modal, Table, Switch, Form, Input } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import TableSearch from '@/components/TableSearch';
 import UploadTool from '@/components/Upload';
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { DataNode } from 'rc-tree/lib/interface';
-
-interface IAddBrand {
-  addSuccess: () => void
-}
-
-const AddBrand = ({ addSuccess }: IAddBrand) => {
-  const [form] = Form.useForm();
-  const { run } = useRequest(addBrand, {
-    manual: true,
-  });
-  const onFinish = (form: any) => {
-    run(form).then(_ => {
-      addSuccess();
-    });
-  };
-  return (
-    <>
-      <Form
-        form={form}
-        name='basic'
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        onFinish={onFinish}
-      >
-        <Form.Item
-          label='品牌名'
-          name='name'
-          rules={[{ required: true, message: '请输入品牌名称' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item label='品牌logo'
-                   name={'logo'}
-        >
-          <UploadTool
-            onIChange={(list: string[]) => {
-              form.setFieldsValue({ logo: list });
-            }}
-          >
-            <Button icon={<UploadOutlined />}>上传图片</Button>
-          </UploadTool>
-        </Form.Item>
-
-        <Form.Item
-          label='介绍'
-          name='desc'
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label='显示状态'
-          name='status'
-          valuePropName='checked'
-          initialValue={true}
-        >
-          <Switch defaultChecked />
-        </Form.Item>
-
-        <Form.Item
-          label='检索首字母'
-          name='searchKey'
-        >
-          <Input />
-        </Form.Item>
 
 
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type='primary' htmlType='submit'>
-            添加
-          </Button>
-        </Form.Item>
-      </Form>
-    </>
-  );
-};
-
-const BrandCat = () => {
-  const { data, run: listRun } = useRequest(brandCatList, {
-    manual: true,
-  });
-  const { data:catlist } = useRequest(categoryList);
-
-  useEffect(() => {
-    listRun({ currentPage: 1, pageSize: 5 });
-  }, []);
-  const { run } = useRequest(addBrandCat, {
-    manual: true,
-  });
-  const [list, setList] = useState<DataNode[]>();
-  useEffect(() => {
-    const list = getDataNode(catlist?.data?.list!);
-    setList(list);
-  }, [catlist]);
-  const getDataNode = (list: API.Category[]): DataNode[] => {
-    if (list == undefined) {
-      return [];
-    }
-    return list.map(item => {
-      const length = item.subList?.length || 0;
-      const data: DataNode = { key: item.id + '', title: item.name };
-      if (length > 0) {
-        data['children'] = getDataNode(item.subList!);
-      }
-      return data;
-    });
-  };
-  const [selectCatList,setSelectCatList] = useState<{id:number,name:string}[]>()
-  return (
-    <>
-      <TreeSelect
-        treeCheckable={true}
-        showCheckedStrategy={'SHOW_PARENT'}
-        style={{
-          width: '400px',
-        }}
-        onChange={(value:string[],list:ReactNode[])=>{
-          const mm:string[] = list.map((item:ReactNode)=>{
-            return  item!.toString()
-          });
-          const arr = []
-          for (let i = 0; i < mm.length; i++) {
-            const name = mm[i];
-            const id = Number(value[i]);
-            arr.push({id,name})
-          }
-          setSelectCatList(arr)
-        }}
-        treeData={list}
-      />
-      <Button onClick={() => {
-        debugger
-        run({selectCatList}).then(_ => {
-          listRun({ currentPage: 1, pageSize: 5 });
-        });
-      }}>添加关联</Button>
-      <Table<API.BrandCat>
-        dataSource={data?.data?.list} rowKey={'id'}
-        pagination={{
-          defaultCurrent: 1,
-          defaultPageSize: 5,
-          total: data?.data?.totalCount,
-          onChange: function(page, size) {
-            listRun({ currentPage: page, pageSize: size });
-          },
-        }}
-      >
-        <Table.Column<API.BrandCat> title='关联分类' dataIndex='catName' />
-      </Table>
-
-    </>
-  );
-};
-
-export default function() {
-  const { data, run } = useRequest(brandList, {
-    manual: true,
-  });
-  useEffect(() => {
-    run({ currentPage: 1, pageSize: 5 });
-  }, []);
-
+const Index = (props: any) => {
+  const { getList, addBrand, deleteBrand, updateBrand }: BrandDispatchProps = props;
+  const { list, totalCount }: BrandStateType = props;
   const [visible, setVisible] = useState(false);
-  const [brandCatVisible, setBrandCatVisible] = useState(false);
+  const AddModel = () => {
+    const [form] = Form.useForm();
+    return (
+      <>
+        <Modal
+          visible={visible}
+          title={'新增商品'}
+          onCancel={() => setVisible(false)}
+          onOk={() => {
+            addBrand({ ...form.getFieldsValue() }).then(_ => {
+              setVisible(false);
+              getList();
+            });
+          }}
+          destroyOnClose={true}
+        >
+          <Form
+            name='basic'
+            // onFinish={onFinish}
+            // onFinishFailed={onFinishFailed}
+            form={form}
+          >
+            <Form.Item
+              label='品牌名称'
+              name='name'
+              rules={[{ required: true, message: '请输入品牌名称' }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label='品牌logo'
+              name='logo'
+            >
+              <UploadTool
+                onIChange={(list: string[]) => {
+                  console.log(list);
+                  if (list.length > 0) {
+                    form.setFieldsValue({ logo: list[0] });
+                  }
+                }}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label='品牌描述'
+              name='descript'
+            >
+              <Input />
+            </Form.Item>
+
+
+            <Form.Item
+              label='显示状态'
+              name='showStatus'
+              valuePropName={'checked'}
+              initialValue={1}
+            >
+              <Switch defaultChecked={true} onChange={(showStatus) => {
+                form.setFieldsValue({ showStatus: showStatus ? 1 : 0 });
+              }} />
+            </Form.Item>
+            <Form.Item
+              label='首字母检索'
+              name='firstLetter'
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label='排序'
+              name='sort'
+            >
+              <Input />
+            </Form.Item>
+
+          </Form>
+        </Modal>
+      </>
+    );
+  };
+
+  useEffect(() => {
+    getList();
+  }, []);
+
   return (
     <>
-      <Modal
-        visible={visible}
-        footer={null}
-        onCancel={() => setVisible(false)}
-        destroyOnClose={true}
-      >
-        <AddBrand
-          addSuccess={() => {
-            setVisible(false);
-            run({ currentPage: 1, pageSize: 5 });
-          }}
-        />
-      </Modal>
-
-      <Modal
-        visible={brandCatVisible}
-        footer={null}
-        onCancel={() => setBrandCatVisible(false)}
-        destroyOnClose={true}
-      >
-        <BrandCat />
-      </Modal>
-
+      <AddModel />
       <Card
+        title={
+          <TableSearch search={(data) => {
+            getList({ data });
+          }} />
+        }
         extra={
           <Button type='primary' icon={<PlusOutlined />} onClick={() => setVisible(true)}>添加</Button>
         }
       >
-        <Table<API.Brand>
-          dataSource={data?.data?.list} rowKey={'id'}
+        <Table<Brand>
+          dataSource={list} rowKey={'id'}
           pagination={{
             defaultCurrent: 1,
-            defaultPageSize: 5,
-            total: data?.data?.totalCount,
-            onChange: function(page, size) {
-              run({ currentPage: page, pageSize: size });
+            defaultPageSize: 10,
+            total: totalCount,
+            onChange: function(currentPage, pageSize) {
+              getList({ currentPage, pageSize });
             },
           }}
         >
-          <Table.Column<API.Brand> title='品牌id' dataIndex='id' />
-          <Table.Column<API.Brand> title='品牌名称' dataIndex='name' />
-          <Table.Column<API.Brand> title='品牌logo' dataIndex='logoUrl' render={(url) => {
+          <Table.Column<Brand> title='品牌id' dataIndex='id' />
+          <Table.Column<Brand> title='品牌名称' dataIndex='name' />
+          <Table.Column<Brand> title='品牌logo' dataIndex='logo' render={(url) => {
             return (
               <>
                 <img src={url} alt='' style={{ width: '100px' }} />
               </>
             );
           }} />
-          <Table.Column<API.Brand> title='描述' dataIndex='desc' />
-          <Table.Column<API.Brand> title='状态' dataIndex='status' render={(status) => {
+          <Table.Column<Brand> title='描述' dataIndex='descript' />
+          <Table.Column<Brand> title='显示状态' dataIndex='showStatus' render={(status) => {
             return (
-              <>
-                {status === 0 ? '上线' : '下线'}
-              </>
+              <Switch checked={status === 1} />
             );
           }} />
-          <Table.Column<API.Brand> title='检索首字母' dataIndex='searchKey' />
-
-          <Table.Column<API.Brand> title='操作' dataIndex='id' render={(_, data) => {
+          <Table.Column<Brand> title='检索首字母' dataIndex='firstLetter' />
+          <Table.Column<Brand> title='排序' dataIndex='sort' />
+          <Table.Column<Brand> title='操作' dataIndex='id' render={(_, data) => {
             return (
               <>
-                <a href='javascript:;' onClick={() => {
-                  setBrandCatVisible(true);
+                <a href='#!' onClick={() => {
+
                 }}>关联分类</a>
                 &nbsp;&nbsp;
-                <a href='javascript:;' onClick={() => {
+                <a href='#!' onClick={() => {
 
                 }}>修改</a>
                 &nbsp;&nbsp;
-                <a href='javascript:;' onClick={() => {
-
+                <a href='#!' onClick={() => {
+                  const modal = Modal.confirm({
+                    title: '提示',
+                    okText: '确定',//默认为确认
+                    cancelText: '取消',//默认为取消
+                    //默认false。默认关闭后状态不会自动清空, 如果希望每次打开都是新内容需要设置true
+                    content: '是否删除该商品',
+                    onOk() {
+                      //调用点击确定时回调的方法
+                      deleteBrand(data.id).then(_ => {
+                        getList();
+                      });
+                    },
+                    onCancel() {
+                      modal.destroy();//这是调用Modal.confirm()后返回的引用，可以通过该引用更新和关闭弹窗
+                    },
+                  });
                 }}>删除</a>
               </>
             );
@@ -251,4 +175,14 @@ export default function() {
       </Card>
     </>
   );
-}
+};
+const mapStateToProps = ({ brand }: { brand: BrandStateType }) => {
+  return { ...brand };
+};
+const mapDispatchToProps = (dispatch: any): BrandDispatchProps => ({
+  getList: (data?: any) => dispatch({ type: 'brand/getListSync', payload: data }),
+  addBrand: (data?: any) => dispatch({ type: 'brand/add', payload: data }),
+  deleteBrand: (data?: any) => dispatch({ type: 'brand/delete', payload: data }),
+  updateBrand: (data?: any) => dispatch({ type: 'brand/update', payload: data }),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Index);
