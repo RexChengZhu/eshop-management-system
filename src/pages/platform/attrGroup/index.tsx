@@ -16,6 +16,7 @@ const { Sider } = Layout;
 const Index = (props: any) => {
 
   const { cateTree, add, del, update, getList }: AttrGroupDispatchProps = props;
+  const { nodes }: CategoryStateType = props;
   const { totalCount, list }: AttrGroupStateType = props;
   useEffect(() => {
     cateTree();
@@ -25,19 +26,6 @@ const Index = (props: any) => {
   const [visible, setVisible] = useState(false);
   const AddAttrGroup = () => {
     const [form] = Form.useForm();
-    const getDataNode = (list?: Category[]): DataNode[] => {
-      if (list == undefined) {
-        return [];
-      }
-      return list.map(item => {
-        const length = item.subList?.length || 0;
-        const data: DataNode = { key: item.id + '', title: item.name };
-        if (length > 0) {
-          data['children'] = getDataNode(item.subList!);
-        }
-        return data;
-      });
-    };
     const [selectCat, setSelectCat] = useState<Category | null>(category || null);
     return (
       <>
@@ -100,7 +88,7 @@ const Index = (props: any) => {
               <TreeSelect
                 style={{ width: '100%' }}
                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                treeData={getDataNode(tree)}
+                treeData={nodes}
                 placeholder='Please select'
                 treeDefaultExpandAll
                 onChange={(item: string, node) => {
@@ -192,7 +180,8 @@ const Index = (props: any) => {
   );
 };
 const mapStateToProps = ({ attrGroup, category }: { attrGroup: AttrGroupStateType, category: CategoryStateType }) => {
-  return { ...attrGroup, tree: category.tree };
+  debugger
+  return { ...attrGroup, tree: category.tree, nodes: category.nodes };
 };
 const mapDispatchToProps = (dispatch: any): AttrGroupDispatchProps => ({
   getList: (data?: any) => dispatch({ type: 'attrGroup/getListAsync', payload: data }),

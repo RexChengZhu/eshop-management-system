@@ -1,8 +1,6 @@
 import mockjs, { Random } from 'mockjs';
 
 export default {
-  // 使用 mockjs 等三方库
-
   /**
    * 分类列表
    */
@@ -83,6 +81,24 @@ export default {
           brandId: '@increment(1)',
           catId:'@increment(100)',
           catName:'@ctitle(3)'
+        },
+      ],
+    },
+  }),
+
+  'POST /product/categoryRelate/getList':mockjs.mock({
+    msg: '',
+    code: '',
+    data: {
+      curPage: 1,
+      totalCount: 10,
+      'list|10-20': [
+        {
+          id: '@increment(1)',
+          brandId: '@increment(1)',
+          catelogId:'@increment(100)',
+          brandName:'@ctitle(3)',
+          catelogName:"@ctitle(3)"
         },
       ],
     },

@@ -1,3 +1,5 @@
+import { DataNode } from 'rc-tree/lib/interface';
+
 export type Category = {
   id?: number,
   pid?: number,
@@ -11,7 +13,8 @@ export type Category = {
 export type CategoryStateType = {
   list?: Category[],
   totalCount?: number,
-  tree:Category[]
+  tree:Category[],
+  nodes:DataNode[]
 }
 
 export interface CategoryDispatchProps {

@@ -143,7 +143,8 @@ const Index = (props: any) => {
               <>
                 <Link to={{
                   pathname:"/brand/category-relation/",
-                  search:"id="+data.id
+                  search:"id="+data.id,
+                  state:{name:data.name}
                 }}  >
                   关联分类
                 </Link>

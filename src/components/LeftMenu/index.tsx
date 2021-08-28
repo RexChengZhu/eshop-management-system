@@ -123,10 +123,12 @@ const LeftMenu = () => {
       );
     }
   });
+  const path = "/" + location.pathname.split("/")[1]
   const selectKey = () => {
 
+
      const data = list.flatMap(item => item.children)
-      .find(item => item != undefined && location.pathname === item.key);
+      .find(item => item != undefined && path === item.key);
      return  data?.parent || ''
   };
   return (
@@ -137,7 +139,7 @@ const LeftMenu = () => {
       </header>
       <Menu
         style={{ width: '100%' }}
-        selectedKeys={[location.pathname]}
+        selectedKeys={[path]}
         defaultOpenKeys={[selectKey()]}
         mode='inline'
         theme='dark'

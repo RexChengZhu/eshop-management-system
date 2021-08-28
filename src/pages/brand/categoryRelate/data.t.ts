@@ -16,4 +16,5 @@ export interface CategoryBrandRelateDispatchProps {
   add: (options?: any) => Promise<any>
   del: (options?: any) => Promise<any>
   update: (options?: any) => Promise<any>
+  getNodes: (options?: any) => Promise<any>
 }
