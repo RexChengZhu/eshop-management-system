@@ -7,6 +7,7 @@ import CateTree from '@/components/CateTree';
 import TableSearch from '@/components/TableSearch';
 import { PlusOutlined } from '@ant-design/icons';
 import UploadTool from '@/components/Upload';
+import {Link} from 'umi'
 import { DataNode } from 'rc-tree/lib/interface';
 import { Brand } from '@/pages/brand/data.t';
 
@@ -15,13 +16,9 @@ const { Sider } = Layout;
 
 const Index = (props: any) => {
 
-  const { cateTree, add, del, update, getList }: AttrGroupDispatchProps = props;
+  const {  add, del, update, getList }: AttrGroupDispatchProps = props;
   const { nodes }: CategoryStateType = props;
   const { totalCount, list }: AttrGroupStateType = props;
-  useEffect(() => {
-    cateTree();
-  }, []);
-  const { tree }: CategoryStateType = props;
   const [category, setCategory] = useState<Category>();
   const [visible, setVisible] = useState(false);
   const AddAttrGroup = () => {
@@ -107,10 +104,10 @@ const Index = (props: any) => {
       <AddAttrGroup />
       <Layout>
         <Sider>
-          <CateTree selected={(item) => {
+          <CateTree selected={(item:Category) => {
             getList({ catId: item.id });
             setCategory(item);
-          }} list={tree} />
+          }}  />
         </Sider>
         <Layout>
           <Card
@@ -142,9 +139,13 @@ const Index = (props: any) => {
               <Table.Column<Brand> title='操作' dataIndex='id' render={(_, data) => {
                 return (
                   <>
-                    <a href='#!' onClick={() => {
-
-                    }}>关联分类</a>
+                    <Link to={{
+                      pathname:"/attr_group/attr-relation",
+                      search:"id="+data.id,
+                      state:{name:data.name}
+                    }}  >
+                      关联规格参数
+                    </Link>
                     &nbsp;&nbsp;
                     <a href='#!' onClick={() => {
 
@@ -180,15 +181,13 @@ const Index = (props: any) => {
   );
 };
 const mapStateToProps = ({ attrGroup, category }: { attrGroup: AttrGroupStateType, category: CategoryStateType }) => {
-  debugger
-  return { ...attrGroup, tree: category.tree, nodes: category.nodes };
+  return { ...attrGroup,  nodes: category.nodes };
 };
 const mapDispatchToProps = (dispatch: any): AttrGroupDispatchProps => ({
   getList: (data?: any) => dispatch({ type: 'attrGroup/getListAsync', payload: data }),
   add: (data?: any) => dispatch({ type: 'attrGroup/add', payload: data }),
   del: (data?: any) => dispatch({ type: 'attrGroup/del', payload: data }),
   update: (data?: any) => dispatch({ type: 'attrGroup/update', payload: data }),
-  cateTree: (data?: any) => dispatch({ type: 'category/getCategoryTree', payload: data }),
 
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Index);

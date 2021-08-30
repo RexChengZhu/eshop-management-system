@@ -14,7 +14,7 @@ export type CategoryStateType = {
   list?: Category[],
   totalCount?: number,
   tree:Category[],
-  nodes:DataNode[]
+  nodes:DataNode[],
 }
 
 export interface CategoryDispatchProps {

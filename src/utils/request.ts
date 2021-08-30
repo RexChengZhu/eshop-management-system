@@ -49,7 +49,7 @@ const request = extend({
 });
 /**
  * 处理响应/请求入参数据，删除返回值为null的数据，避免结构赋值出现问题
- * @param response
+ * @attrParam response
  */
 const handleResponseData = (response: object) => {
   if (!response || typeof response !== 'object') {

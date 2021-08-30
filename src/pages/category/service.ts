@@ -7,9 +7,7 @@ export async function getCategoryList(options?: { [key: string]: any }) {
   })
 }
 export async function getCategoryTree(options?: { [key: string]: any }) {
-  return request.post<API.R<Category[]>>('/product/category/tree', {
-    data:options
-  })
+  return request.get<API.R<Category[]>>('/product/category/tree', {})
 }
 export async function addCategory(options?: { [key: string]: any }) {
   return request.post<API.R<API.Page<Category>>>('/product/category/save', {

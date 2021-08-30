@@ -17,6 +17,5 @@ export interface AttrGroupDispatchProps {
   add: (options?: any) => Promise<any>
   del: (options?: any) => Promise<any>
   update: (options?: any) => Promise<any>
-  cateTree: (options?: any) => Promise<any>
 
 }

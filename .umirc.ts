@@ -68,9 +68,19 @@ export default defineConfig({
           component: '@/pages/platform/attrGroup',
         },
         {
+          title: '属性分组关联',
+          path: '/attr_group/attr-relation',
+          component: '@/pages/platform/attrGroup/attrGroupRelate/index',
+        },
+        {
           title: '销售属性',
           path: '/attr_sku',
           component: '@/pages/platform/skuAttr',
+        },
+        {
+          title: '规格参数',
+          path: '/attr_param',
+          component: '@/pages/platform/attrParam',
         },
       ],
     },

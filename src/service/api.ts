@@ -11,7 +11,7 @@ export async function getOssSignature(options?: { [key: string]: any }) {
 
 /**
  * 获得分类列表
- * @param options
+ * @attrParam options
  */
 export async function categoryList(options?: { [key: string]: any }) {
   return request.post<API.R<API.Page<API.Category>>>('/product/category/list', {
@@ -21,7 +21,7 @@ export async function categoryList(options?: { [key: string]: any }) {
 
 /**
  * 修改分类名称
- * @param options
+ * @attrParam options
  */
 export async function updateCategory(options?: API.Category){
   return request.post<API.R<any>>('/product/category/update',{
@@ -53,7 +53,7 @@ export async function brandList(options?:any){
 
 /**
  * 添加品牌分类关联
- * @param options
+ * @attrParam options
  */
 export async function addBrandCat(options?:any){
   return request.post<API.R<API.Page<API.Product>>>('/product/brand/addCat',{
